@@ -2,16 +2,31 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
+
 on:
   push:
     branches:
       - main
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout the repository code
       - uses: actions/checkout@v4
-      - run: npm ci && run build
+
+      # Step 2: Set up Node.js environment to match your project requirements
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16' # or any version compatible with your project
+
+      # Step 3: Install dependencies using npm ci (for a clean install)
+      - run: npm ci
+
+      # Step 4: Build the Next.js project
+      - run: npm run build
+
+      # Step 5: Deploy to Firebase Hosting using the action
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
